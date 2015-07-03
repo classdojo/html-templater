@@ -1,0 +1,23 @@
+{
+  "name": "html-templater",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "handlebars": "3.0.3",
+    "handlebars-layouts": "3.1.0",
+    "juice": "1.2.0",
+    "lodash": "3.10.0",
+    "slide": "1.1.6"
+  },
+  "devDependencies": {
+    "expect.js": "0.3.1",
+    "mocha": "2.2.5",
+    "sinon": "1.15.4"
+  }
+}
