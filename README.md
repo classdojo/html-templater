@@ -13,10 +13,11 @@ make test
 var HtmlTemplater = require("html-templater");
 
 /*
- * Html templater allows you to specify a template, along with optional layout and css strings,
- * and produces an html page with inlined css. The templater uses handlebar-layouts to
- * support this layout templating. The layout, if present, is automatically registered to
- * the template uses in the {{extend}} block (In this case: "layout").
+ * Html templater allows you to specify a template, along with optional layout 
+ * and css strings, and produces an html page with inlined css. The templater 
+ * uses handlebar-layouts to support this layout templating. The layout, if 
+ * present, is automatically registered to whatever the template specifies 
+ * in the {{extend}} block (In this case: "layout").
 */
 
 var htmlTemplater = HtmlTemplater({
@@ -30,9 +31,9 @@ htmlTemplater.render({greeting: "hello"}, function(err, renderedHtml) {
 
 
 /*
- * You can also register file assets for htmlTemplater to load. If both the file and
- * non file option exist, the file is simply loaded and appended to whatever string
- * is supplied in the non file option.
+ * You can also register file assets for htmlTemplater to load. If both 
+ * the file and non file option exist, the file is simply loaded and appended
+ * to the string supplied in the non file option.
 */
 
 
