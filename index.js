@@ -6,9 +6,6 @@ var fs                = require("fs");
 var chain             = require("slide").chain;
 var handlebarLayouts  = require("handlebars-layouts");
 
-var TEMPLATE_DIR  = __dirname + "/../../../templates";
-var CSS_FILE      = __dirname + "/../../../templates/combined.css";
-
 function HtmlTemplater(conf) {
   if(!(this instanceof HtmlTemplater)) {
     return new HtmlTemplater(conf);
