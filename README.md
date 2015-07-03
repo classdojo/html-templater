@@ -22,9 +22,9 @@ var HtmlTemplater = require("html-templater");
 var htmlTemplater = HtmlTemplater({
 	css: '.div{margin: 10px}',
 	layout: '<html><header> {{#block: "body"}}{{/block}}</header></html>',
-	template: '{{/extend "layout"}} {{content "body"}} hello world {{/content}} {{/extend}}'
+	template: '{{/extend "layout"}} {{content "body"}} {{ greeting }} world {{/content}} {{/extend}}'
 })
-htmlTemplater.render(function(err, renderedHtml) {
+htmlTemplater.render({greeting: "hello"}, function(err, renderedHtml) {
   console.log(renderedHtml);
 });
 
@@ -44,7 +44,7 @@ var htmlTemplater = HtmlTemplater({
 })
 
 
-htmlTemplater.render(function(err, renderedHtml) {
+htmlTemplater.render({greeting: "hello"}, function(err, renderedHtml) {
   // the applied `css` will be '.div{margin: 10px} .testclass{margin: 10px}'
   console.log(renderedHtml);
 });
