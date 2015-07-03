@@ -38,7 +38,14 @@ HtmlTemplater.prototype.render = function(templateVars, cb) {
 
 /*
  * Takes the *Files options and appends their
- * contents to their respective options. 
+ * contents to their respective options.
+ *
+ * There's a harmless race condition that could
+ * cause the assets to load more than once. The
+ * alternative would be to use fs.readFileSync
+ * or a bit more complicated 'locking' code to
+ * ensure mutual exclusion.
+ *
 */
 HtmlTemplater.prototype._loadAssets = function(cb) {
   var files = this.__assetsToLoad;
@@ -52,7 +59,7 @@ HtmlTemplater.prototype._loadAssets = function(cb) {
     if(err) {
       return cb(err);
     }
-    /* Merge results together and append to original options*/
+    /* Merge results together and append to original options */
     results = _.extend.apply(null, results);
     _.forEach(results, function(v, k) { me.__conf[k] = (me.__conf[k] || "") + v });
     me.__assetsToLoad = null;
@@ -60,10 +67,7 @@ HtmlTemplater.prototype._loadAssets = function(cb) {
   });
 };
 
-/* detects the layout name the template expects and */
 HtmlTemplater.prototype._registerLayout = function(cb) {
-  // let's do compile and render of the template to collect
-  // the layout name.
   var layoutName;
   handlebarLayouts.register(Handlebars);
   Handlebars.registerHelper("extend", function(name) {
@@ -97,7 +101,6 @@ HtmlTemplater.prototype._render = function(templateVars, cb) {
   });
 };
 
-//export for testing
 HtmlTemplater.prototype._loadAsset = function(asset, path, cb) {
   fs.readFile(path, {encoding: "utf8"}, function(err, content) {
     if(err) {
