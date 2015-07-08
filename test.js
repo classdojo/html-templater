@@ -15,8 +15,8 @@ describe("HtmlTemplater", function() {
     layoutFile: "./test/layout.hbs"
   };
 
-  var conf = _.pick.bind(_, fullConf, "template", "css", "layout");
-  var fileConf = _.pick.bind(_, fullConf, "templateFile", "cssFile", "layoutFile");
+  var conf       = _.pick.bind(_, fullConf, "template", "css", "layout");
+  var fileConf   = _.pick.bind(_, fullConf, "templateFile", "cssFile", "layoutFile");
 
   describe("constructor", function() {
 
@@ -27,8 +27,8 @@ describe("HtmlTemplater", function() {
 
     it("requires a template or templateFile", function() {
       expect(HtmlTemplater.bind(HtmlTemplater, {})).to.throwException();
-      HtmlTemplater(_.pick(conf(), "template"));
-      HtmlTemplater(_.pick(fileConf(), "templateFile"));
+      expect(HtmlTemplater.bind(HtmlTemplater, _.pick(conf(), "template"))).to.not.throwException();
+      expect(HtmlTemplater.bind(HtmlTemplater, _.pick(fileConf(), "templateFile"))).to.not.throwException();
     });
 
     it("separates css and file options", function() {
@@ -47,16 +47,18 @@ describe("HtmlTemplater", function() {
     it("sets shouldRegisterLayout=false when there are no layout options present", function() {
       expect(HtmlTemplater(_.pick(conf(), "template")).__shouldRegisterLayout).to.be(false);
     });
+
+    
   });
 
   describe("#render", function() {
     var loadAssetsStub, registerLayoutStub, renderStub;
 
     before(function() {
-      htmlTemplater      = HtmlTemplater(fullConf);
-      loadAssetsStub     = sinon.stub(htmlTemplater, "_loadAssets").yields(null);
-      registerLayoutStub = sinon.stub(htmlTemplater, "_registerLayout").yields(null);
-      renderStub         = sinon.stub(htmlTemplater, "_render").yields(null);
+      htmlTemplater       = HtmlTemplater(fullConf);
+      loadAssetsStub      = sinon.stub(htmlTemplater, "_loadAssets").yields(null);
+      registerLayoutStub  = sinon.stub(htmlTemplater, "_registerLayout").yields(null);
+      renderStub          = sinon.stub(htmlTemplater, "_render").yields(null);
     });
 
     it("loads assets, registers layout, and renders template", function(done) {
@@ -76,7 +78,7 @@ describe("HtmlTemplater", function() {
     var loadAssetStub;
     var firstTwoArgs = function(call) {
       return call.args.slice(0, 2);
-    }
+    };
 
     beforeEach(function() {
       htmlTemplater = HtmlTemplater(fileConf());
@@ -142,6 +144,24 @@ describe("HtmlTemplater", function() {
     it("uses css provided in `css` when *files are specified", function(done) {
       htmlTemplater = HtmlTemplater(_.extend(_.omit(fileConf(), "cssFile"), {css: ".testclass{margin: 10px}"}));
       htmlTemplater.render({testVar: "hello world"}, function(err, renderedHtml) {
+        expect(!!err).to.be(false);
+        expect(renderedHtml).to.be(expectedOutput);
+        done();
+      });
+    });
+  });
+
+  describe("integration test with helpers", function() {
+    var expectedOutput = '<html>\n\t<header>Header</header>\n\t\t<div class="testclass" style="margin: 10px;"> helped test </div>\n\t<footer>Footer</footer>\n</html>\n';
+
+    it("templates properly with a provided layout", function(done) {
+      htmlTemplater = HtmlTemplater(_.set(fileConf(), "templateFile", "./test/templateWithHelper.hbs"));
+      htmlTemplater.registerHelper({
+        "testHelper": function(context) {
+          return "helped";
+        }
+      });
+      htmlTemplater.render({testVar: "value that will be replaced to be helper"}, function(err, renderedHtml) {
         expect(!!err).to.be(false);
         expect(renderedHtml).to.be(expectedOutput);
         done();

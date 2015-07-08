@@ -1,6 +1,6 @@
 {
   "name": "html-templater",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A small wrapper around juice and handlebars that renders and inlines css for html templates.",
   "main": "index.js",
   "scripts": {
