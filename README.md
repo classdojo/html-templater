@@ -49,6 +49,18 @@ htmlTemplater.render({greeting: "hello"}, function(err, renderedHtml) {
   // the applied `css` will be '.div{margin: 10px} .testclass{margin: 10px}'
   console.log(renderedHtml);
 });
+
+/*
+ * You can also register (and unregister) helpers to be used in rendering.
+ */
+var htmlTemplater = HtmlTemplater(_.set(fileConf(), "templateFile", "./test/templateWithHelper.hbs"));
+htmlTemplater.registerHelper({
+  "testHelper": function(context) {
+    return "helped";
+  }
+});
+// now {{testHelper testVar}} in your layouts will be rendered as "helped", per this helper function
+
 ```
 
 
