@@ -53,7 +53,11 @@ htmlTemplater.render({greeting: "hello"}, function(err, renderedHtml) {
 /*
  * You can also register (and unregister) helpers to be used in rendering.
  */
-var htmlTemplater = HtmlTemplater(_.set(fileConf(), "templateFile", "./test/templateWithHelper.hbs"));
+var htmlTemplater = HtmlTemplater({
+  cssFile: './test/style.css',
+  layoutFile: './test/layout.hbs',
+  templateFile: './test/templateWithHelper.hbs'
+});
 htmlTemplater.registerHelper({
   "testHelper": function(context) {
     return "helped";
