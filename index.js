@@ -94,7 +94,10 @@ HtmlTemplater.prototype._render = function(templateVars, cb) {
   var juiceOptions = _.extend({
     extraCss: this.__conf.css,
     applyStyleTags: false,
-    removeStyleTags: false
+    removeStyleTags: false,
+    webResources: {
+      images: false
+    }
   }, this.__juiceOptions);
   juice.juiceResources(renderedTemplate, juiceOptions, function(err, inlinedTemplate) {
     if (err) {
