@@ -3,6 +3,7 @@ var expect        = require("expect.js");
 var sinon         = require("sinon");
 var fs            = require("fs");
 var _             = require("lodash");
+var async         = require("async");
 
 describe("HtmlTemplater", function() {
   var htmlTemplater, stub;
@@ -110,6 +111,30 @@ describe("HtmlTemplater", function() {
     });
   });
 
+  describe("#_loadAssets called in parallel", function() {
+    var loadAssetStub;
+
+    beforeEach(function() {
+      htmlTemplater = HtmlTemplater(fileConf());
+      loadAssetStub = sinon.stub(htmlTemplater, "_loadAsset", function(asset, path, cb) {
+        setTimeout(function() {
+          var ret = {};
+          ret[asset] = conf()[asset];
+          cb(null, ret);
+        }, 50);
+      });
+    });
+
+    it("only append the contents once", function(done) {
+      async.times(10, function(n, next) {
+        htmlTemplater._loadAssets(next);
+      }, function(err) {
+        expect(!!err).to.be(false);
+        expect(htmlTemplater.__conf).to.eql(conf());
+        done();
+      });
+    });
+  });
 
   describe("#_registerLayout", function() {
 

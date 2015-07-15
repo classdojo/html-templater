@@ -16,6 +16,7 @@ function HtmlTemplater(conf) {
   this.__handlebars = handlebars.create();
 
   this.__conf                 = _.pick(conf, "css", "template", "layout");
+  this.__confLoaded           = {};
   this.__assetsToLoad         = _.pick(conf, "cssFile", "templateFile", "layoutFile");
   this.__shouldRegisterLayout = (this.__conf.layout || this.__assetsToLoad.layoutFile) ? true : false;
   this.__juiceOptions = conf.juice || {};
@@ -64,7 +65,12 @@ HtmlTemplater.prototype._loadAssets = function(cb) {
     }
     // Merge results together and append to original options
     results = _.extend.apply(null, results);
-    _.forEach(results, function(v, k) { me.__conf[k] = (me.__conf[k] || "") + v; });
+    _.forEach(results, function(v, k) {
+      if (!me.__confLoaded[k]) {
+        me.__conf[k] = (me.__conf[k] || "") + v;
+        me.__confLoaded[k] = true;
+      }
+    });
     me.__assetsToLoad = null;
     cb();
   });
