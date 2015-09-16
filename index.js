@@ -102,7 +102,9 @@ HtmlTemplater.prototype._render = function(templateVars, cb) {
     applyStyleTags: false,
     removeStyleTags: false,
     webResources: {
-      images: false
+      images: false,
+      links: false,
+      scripts: false
     }
   }, this.__juiceOptions);
   juice.juiceResources(renderedTemplate, juiceOptions, function(err, inlinedTemplate) {
