@@ -96,7 +96,12 @@ HtmlTemplater.prototype._render = function(templateVars, cb) {
   if(!this.__memoizedTemplate) {
     this.__memoizedTemplate = this.__handlebars.compile(this.__conf.template);
   }
-  var renderedTemplate = this.__memoizedTemplate(templateVars);
+  try {
+    var renderedTemplate = this.__memoizedTemplate(templateVars);
+  } catch (err) {
+    return cb(err);
+  }
+
   var juiceOptions = _.extend({
     extraCss: this.__conf.css,
     applyStyleTags: false,
