@@ -19,6 +19,8 @@ function HtmlTemplater(conf) {
   this.__assetsToLoad = _.pick(conf, "cssFile", "templateFile", "layoutFile");
   this.__shouldRegisterLayout = this.__conf.layout || this.__assetsToLoad.layoutFile ? true : false;
   this.__juiceOptions = conf.juice || {};
+
+  this.__assetCache = {};
 }
 
 HtmlTemplater.prototype.render = function(templateVars, cb) {
@@ -125,15 +127,27 @@ HtmlTemplater.prototype._render = function(templateVars, cb) {
   });
 };
 
-HtmlTemplater.prototype._loadAsset = function(asset, path, cb) {
-  fs.readFile(path, { encoding: "utf8" }, function(err, content) {
-    if (err) {
-      return cb(err);
-    }
-    var result = {};
-    result[asset] = content;
-    cb(null, result);
-  });
+HtmlTemplater.prototype._loadAsset = async function(asset, path, cb) {
+  if (!this.__assetCache[path]) {
+    this.__assetCache[path] = new Promise((resolve, reject) => {
+      fs.readFile(path, { encoding: "utf8" }, function(err, content) {
+        if (err) {
+          return reject(err);
+        }
+        resolve(content);
+      });
+    })
+  }
+
+  try {
+    const content = await this.__assetCache[path];
+    return cb(null, {[asset]: content});
+  } catch (err) {
+    return cb(err);
+  }
+  
+  var result = {};
+  result[asset] = content;
 };
 
 module.exports = HtmlTemplater;
