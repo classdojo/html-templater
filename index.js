@@ -34,7 +34,7 @@ HtmlTemplater.prototype.render = function(templateVars, cb) {
       this.__shouldRegisterLayout && [this._registerLayout.bind(this)],
       [this._render.bind(this), templateVars],
     ],
-    function(err, result) {
+    (err, result) => {
       if (err) {
         return cb(err);
       }
@@ -62,13 +62,13 @@ HtmlTemplater.prototype._loadAssets = function(cb) {
       files.templateFile && [loadAsset, "template", files.templateFile],
       files.cssFile && [loadAsset, "css", files.cssFile],
     ],
-    function(err, results) {
+    (err, results) => {
       if (err) {
         return cb(err);
       }
       // Merge results together and append to original options
       results = _.extend.apply(null, results);
-      _.forEach(results, function(v, k) {
+      _.forEach(results, (v, k) => {
         if (!me.__confLoaded[k]) {
           me.__conf[k] = (me.__conf[k] || "") + v;
           me.__confLoaded[k] = true;
@@ -83,7 +83,7 @@ HtmlTemplater.prototype._loadAssets = function(cb) {
 HtmlTemplater.prototype._registerLayout = function(cb) {
   var layoutName;
   handlebarLayouts.register(this.__handlebars);
-  this.__handlebars.registerHelper("extend", function(name) {
+  this.__handlebars.registerHelper("extend", (name) => {
     layoutName = name;
   });
   this.__handlebars.compile(this.__conf.template)();
@@ -119,7 +119,7 @@ HtmlTemplater.prototype._render = function(templateVars, cb) {
     },
     this.__juiceOptions,
   );
-  juice.juiceResources(renderedTemplate, juiceOptions, function(err, inlinedTemplate) {
+  juice.juiceResources(renderedTemplate, juiceOptions, (err, inlinedTemplate) => {
     if (err) {
       return cb(err);
     }
@@ -130,24 +130,21 @@ HtmlTemplater.prototype._render = function(templateVars, cb) {
 HtmlTemplater.prototype._loadAsset = async function(asset, path, cb) {
   if (!this.__assetCache[path]) {
     this.__assetCache[path] = new Promise((resolve, reject) => {
-      fs.readFile(path, { encoding: "utf8" }, function(err, content) {
+      fs.readFile(path, { encoding: "utf8" }, (err, content) => {
         if (err) {
           return reject(err);
         }
         resolve(content);
       });
-    })
+    });
   }
 
   try {
     const content = await this.__assetCache[path];
-    return cb(null, {[asset]: content});
+    return cb(null, { [asset]: content });
   } catch (err) {
     return cb(err);
   }
-  
-  var result = {};
-  result[asset] = content;
 };
 
 module.exports = HtmlTemplater;
