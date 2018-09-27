@@ -23,11 +23,8 @@ module.exports = {
       },
       "eslint-import-resolver-typescript": true,
     },
-    "react": {
-      "version": "15.1",
-    },
   },
-  plugins: ["react", "security", "eslint-comments"],
+  plugins: ["security", "eslint-comments"],
   globals: {
     "describe": false,
     "it": false,
