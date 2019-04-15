@@ -9,7 +9,7 @@
   "author": "Chris Olivares <chris@classdojo.com>",
   "license": "MIT",
   "dependencies": {
-    "handlebars": "4.0.11",
+    "handlebars": "4.0.14",
     "handlebars-layouts": "3.1.0",
     "juice": "4.3.2",
     "lodash": "4.17.5",
