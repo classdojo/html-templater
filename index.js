@@ -51,6 +51,14 @@ HtmlTemplater.prototype.unregisterHelper = function() {
   this.__handlebars.unregisterHelper.apply(this.__handlebars, _.toArray(arguments));
 };
 
+HtmlTemplater.prototype.registerPartials = function() {
+  this.__handlebars.registerPartials.apply(this.__handlebars, _.toArray(arguments));
+};
+
+HtmlTemplater.prototype.registerPartial = function() {
+  this.__handlebars.registerPartial.apply(this.__handlebars, _.toArray(arguments));
+};
+
 // Takes the *Files options and appends their contents to their respective options.
 HtmlTemplater.prototype._loadAssets = function(cb) {
   var files = this.__assetsToLoad;
